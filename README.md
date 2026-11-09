@@ -12,9 +12,13 @@ This tool scans Docker images for vulnerabilities using JFrog Xray and generates
 - **Severity color coding** and easy navigation between images.
 - **Responsive, modern UI** for easy browsing and reporting.
 - **Flexible image selection:**  
-  Scan all local images or only specific images using the `--images` option.
-- **Enhanced logging:**  
-  Detailed progress and error logs for troubleshooting.
+  Scan all local images, specific images via `--images`, or a list from a file via `--image-file`.
+- **Automatic image pulling:**  
+  Automatically pulls images from configured remote registries if not found locally, or force-pulls latest tags using `--pull`.
+- **Automatic disk cleanup:**  
+  Optionally cleans up (`--cleanup`) images pulled during the scan to avoid filling up disk space.
+- **Enhanced logging & concurrency control:**  
+  Configurable concurrency (`--threads`) with detailed progress and error logs.
 
 ---
 
@@ -56,15 +60,44 @@ This tool scans Docker images for vulnerabilities using JFrog Xray and generates
 python3 docker-security-scan.py
 ```
 
-### Scan only specific images:
+### Scan only specific images (auto-pulls if not local):
 ```bash
 python3 docker-security-scan.py --images repo1:tag1 repo2:tag2
 ```
 
-### Example:
+### Scan images listed in a file:
 ```bash
-python3 docker-security-scan.py --images ubuntu:latest myapp:1.0
+python3 docker-security-scan.py --image-file images.txt
 ```
+
+### Filter report by specific severities:
+```bash
+# Only include Critical and High vulnerabilities:
+python3 docker-security-scan.py --images ubuntu:latest --severity critical high
+
+# Or comma-separated:
+python3 docker-security-scan.py --image-file images.txt --severity critical,high
+```
+
+### Force pull latest images before scanning and cleanup afterwards:
+```bash
+python3 docker-security-scan.py --images myregistry.com/app:latest --pull --cleanup
+```
+
+### Adjust concurrency:
+```bash
+python3 docker-security-scan.py --images image1:tag image2:tag --threads 8
+```
+
+### Command Line Options:
+| Flag | Description |
+|---|---|
+| `--images` | Space-separated list of images/tags to scan |
+| `--image-file` | Path to text file containing image names/tags (one per line) |
+| `--severity` | Filter vulnerabilities by severity (`critical`, `high`, `medium`, `low`, `unknown`) |
+| `--pull` | Force pull latest images even if already present locally |
+| `--cleanup` | Remove pulled images after scanning to save disk space |
+| `--threads` | Number of concurrent scans (default: 4) |
 
 After completion, open the generated HTML file (e.g., `docker_security_scan_report_YYYYMMDD_HHMMSS.html`) in your browser.
 

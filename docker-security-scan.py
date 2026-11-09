@@ -17,6 +17,23 @@ except ImportError:
 import concurrent.futures
 import logging
 
+# --- Severity Configuration ---
+SEVERITY_ORDER = ['Critical', 'High', 'Medium', 'Low', 'Unknown']
+SEVERITY_MAP = {
+    'critical': 'Critical',
+    'high': 'High',
+    'medium': 'Medium',
+    'low': 'Low',
+    'unknown': 'Unknown'
+}
+SEVERITY_COLORS = {
+    'Critical': '#b71c1c',
+    'High': '#e65100',
+    'Medium': '#fbc02d',
+    'Low': '#388e3c',
+    'Unknown': '#546e7a'
+}
+
 # --- Enhanced Logging Setup ---
 logging.basicConfig(
     level=logging.INFO,
@@ -36,122 +53,257 @@ def check_command(cmd):
     return found
 
 def run_cmd(cmd, capture_output=True):
-    logger.debug(f"Running command: {cmd}")
+    is_shell = isinstance(cmd, str)
+    cmd_str = cmd if is_shell else ' '.join(cmd)
+    logger.debug(f"Running command: {cmd_str}")
     try:
-        result = subprocess.run(cmd, shell=True, check=True, capture_output=capture_output, text=True)
-        logger.debug(f"Command succeeded: {cmd}")
+        result = subprocess.run(cmd, shell=is_shell, check=True, capture_output=capture_output, text=True)
+        logger.debug(f"Command succeeded: {cmd_str}")
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
-        logger.error(f"Command failed: {cmd}\nReturn code: {e.returncode}\nOutput: {e.output}\nError: {e.stderr}")
+        err = e.stderr.strip() if e.stderr else (e.output.strip() if e.output else "")
+        logger.error(f"Command failed: {cmd_str}\nReturn code: {e.returncode}\nError: {err}")
         return None
 
-def scan_image(image, temp_dir):
-    safe_name = image.replace('/', '_').replace(':', '_')
-    result_file = os.path.join(temp_dir, f"{safe_name}_scan.json")
-    logger.info(f"Scanning image: {image}")
-    logger.debug(f"Result file: {result_file}")
-    scan_cmd = f'jf docker scan "{image}" --format simple-json'
-    logger.info(f"Running JFrog scan for {image}...")
-    scan_out = run_cmd(scan_cmd)
-    if scan_out is None:
-        logger.error(f"Error scanning image '{image}'. Skipping.")
-        return None
-    with open(result_file, "w") as rf:
-        rf.write(scan_out)
-    logger.info(f"Scan completed for {image}")
+def is_image_local(image):
+    """Check if a Docker image is present locally in the Docker daemon."""
+    try:
+        res = subprocess.run(
+            ["docker", "image", "inspect", image],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL
+        )
+        return res.returncode == 0
+    except Exception as ex:
+        logger.debug(f"Error checking if image '{image}' is local: {ex}")
+        return False
 
-    with open(result_file) as rf:
-        try:
-            data = json.load(rf)
-        except Exception as ex:
-            logger.error(f"Failed to parse JSON for image '{image}': {ex}")
-            data = {}
-    vulns = data.get('vulnerabilities', []) or []
+def pull_image(image):
+    """Pull a Docker image from configured remote repository/registry."""
+    logger.info(f"Pulling Docker image: {image} ...")
+    try:
+        result = subprocess.run(
+            ["docker", "pull", image],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        logger.info(f"Successfully pulled image: {image}")
+        return True
+    except subprocess.CalledProcessError as e:
+        err_msg = e.stderr.strip() if e.stderr else (e.stdout.strip() if e.stdout else "Unknown error")
+        logger.error(f"Failed to pull image '{image}': {err_msg}")
+        return False
 
-    # Count severities
-    critical_count = sum(1 for v in vulns if v and v.get('severity') == 'Critical')
-    high_count = sum(1 for v in vulns if v and v.get('severity') == 'High')
-    medium_count = sum(1 for v in vulns if v and v.get('severity') == 'Medium')
-    low_count = sum(1 for v in vulns if v and v.get('severity') == 'Low')
-    unknown_count = sum(1 for v in vulns if v and v.get('severity') == 'Unknown')
+def remove_image(image):
+    """Remove a Docker image from local Docker storage to free up space."""
+    logger.info(f"Cleaning up pulled image: {image}")
+    try:
+        res = subprocess.run(
+            ["docker", "rmi", image],
+            capture_output=True,
+            text=True
+        )
+        if res.returncode == 0:
+            logger.info(f"Successfully removed image: {image}")
+        else:
+            err = res.stderr.strip() if res.stderr else res.stdout.strip()
+            logger.warning(f"Could not remove image '{image}': {err}")
+    except Exception as ex:
+        logger.warning(f"Exception while removing image '{image}': {ex}")
 
-    logger.info(f"Image '{image}': Critical={critical_count}, High={high_count}, Medium={medium_count}, Low={low_count}, Unknown={unknown_count}")
+def parse_severities(severity_args):
+    """Parse and normalize user-provided severity arguments into standard casing and order."""
+    if not severity_args:
+        return list(SEVERITY_ORDER)
 
-    # Prepare vulnerability details for template
-    vuln_details = []
-    for idx, vuln in enumerate(vulns):
-        severity = vuln.get('severity', 'Unknown')
-        package = vuln.get('impactedPackageName', 'N/A')
-        version = vuln.get('impactedPackageVersion', 'N/A')
-        summary = vuln.get('summary', 'No summary available')
-        fixed = vuln.get('fixedVersions', 'N/A')
-        if fixed is None:
-            fixed = 'N/A'
-        # CVE handling (robust for both 'id' and 'cve' keys)
-        cve_list = []
-        cve_badges = []
-        if 'cves' in vuln and vuln['cves']:
-            for cve in vuln['cves']:
-                cve_id = cve.get('cve') or cve.get('id')
-                if cve_id:
-                    url = f"https://nvd.nist.gov/vuln/detail/{cve_id}"
-                    cve_badges.append({'id': cve_id, 'url': url})
-            cve_list = cve_badges
-        truncated_summary = summary[:150] + ('...' if len(summary) > 150 else '')
-        vuln_id = f'vuln_{safe_name}_{idx}'
-        details = 'No detailed information available.'
-        if 'jfrogResearchInformation' in vuln and vuln['jfrogResearchInformation'] and 'details' in vuln['jfrogResearchInformation']:
-            details = vuln['jfrogResearchInformation']['details']
-        issue_id = vuln.get('issueId', 'N/A')
-        references = vuln.get('references', [])
-        references_text = '\n'.join(references) if references else 'None'
-        vuln_details.append({
-            'severity': severity,
-            'package': package,
-            'version': version,
-            'summary': truncated_summary,
-            'fixed': fixed,
-            'cves': ', '.join([badge['id'] for badge in cve_list]) if cve_list else 'N/A',
-            'cve_list': cve_list,
-            'vuln_id': vuln_id,
-            'details': details,
-            'issue_id': issue_id,
-            'references': references_text,
-        })
+    selected = set()
+    for item in severity_args:
+        for token in item.replace(',', ' ').split():
+            clean = token.strip().lower()
+            if clean in SEVERITY_MAP:
+                selected.add(SEVERITY_MAP[clean])
+            else:
+                logger.warning(
+                    f"Unrecognized severity '{token}'. Valid options: critical, high, medium, low, unknown."
+                )
 
-    image_report = {
-        'image': image,
-        'safe_name': safe_name,
-        'critical_count': critical_count,
-        'high_count': high_count,
-        'medium_count': medium_count,
-        'low_count': low_count,
-        'unknown_count': unknown_count,
-        'vuln_details': vuln_details,
-    }
-    summary_row = {
-        'image': image,
-        'critical': critical_count,
-        'high': high_count,
-        'medium': medium_count,
-        'low': low_count,
-        'unknown': unknown_count,
-        'total': critical_count + high_count + medium_count + low_count + unknown_count,
-    }
-    logger.debug(f"Completed processing image '{image}'")
-    return (image_report, summary_row)
+    if not selected:
+        logger.warning("No valid severities recognized from input. Defaulting to all severities.")
+        return list(SEVERITY_ORDER)
+
+    return [s for s in SEVERITY_ORDER if s in selected]
+
+def scan_image(image, temp_dir, force_pull=False, cleanup=False, allowed_severities=None):
+    was_local = is_image_local(image)
+    pulled_by_script = False
+
+    if force_pull or not was_local:
+        if not was_local:
+            logger.info(f"Image '{image}' is not found locally. Automatically pulling...")
+        else:
+            logger.info(f"Force-pulling latest image '{image}' (--pull specified)...")
+
+        if not pull_image(image):
+            logger.error(
+                f"Cannot scan '{image}' because pulling failed. "
+                "Ensure Docker is authenticated with the registry ('docker login') and the tag exists. Skipping."
+            )
+            return None
+        pulled_by_script = True
+
+    try:
+        safe_name = image.replace('/', '_').replace(':', '_')
+        result_file = os.path.join(temp_dir, f"{safe_name}_scan.json")
+        logger.info(f"Scanning image: {image}")
+        logger.debug(f"Result file: {result_file}")
+        scan_cmd = f'jf docker scan "{image}" --format simple-json'
+        logger.info(f"Running JFrog scan for {image}...")
+        scan_out = run_cmd(scan_cmd)
+        if scan_out is None:
+            logger.error(f"Error scanning image '{image}'. Skipping.")
+            return None
+        with open(result_file, "w") as rf:
+            rf.write(scan_out)
+        logger.info(f"Scan completed for {image}")
+
+        with open(result_file) as rf:
+            try:
+                data = json.load(rf)
+            except Exception as ex:
+                logger.error(f"Failed to parse JSON for image '{image}': {ex}")
+                data = {}
+        raw_vulns = data.get('vulnerabilities', []) or []
+
+        # Filter vulnerabilities according to allowed_severities
+        if allowed_severities is not None:
+            vulns = [v for v in raw_vulns if v and v.get('severity') in allowed_severities]
+        else:
+            vulns = raw_vulns
+
+        # Count severities based on filtered vulnerabilities
+        critical_count = sum(1 for v in vulns if v and v.get('severity') == 'Critical')
+        high_count = sum(1 for v in vulns if v and v.get('severity') == 'High')
+        medium_count = sum(1 for v in vulns if v and v.get('severity') == 'Medium')
+        low_count = sum(1 for v in vulns if v and v.get('severity') == 'Low')
+        unknown_count = sum(1 for v in vulns if v and v.get('severity') == 'Unknown')
+        total_count = len(vulns)
+
+        logger.info(f"Image '{image}' (filtered): Total={total_count}, Critical={critical_count}, High={high_count}, Medium={medium_count}, Low={low_count}, Unknown={unknown_count}")
+
+        # Prepare vulnerability details for template
+        vuln_details = []
+        for idx, vuln in enumerate(vulns):
+            severity = vuln.get('severity', 'Unknown')
+            package = vuln.get('impactedPackageName', 'N/A')
+            version = vuln.get('impactedPackageVersion', 'N/A')
+            summary = vuln.get('summary', 'No summary available')
+            fixed = vuln.get('fixedVersions', 'N/A')
+            if fixed is None:
+                fixed = 'N/A'
+            # CVE handling (robust for both 'id' and 'cve' keys)
+            cve_list = []
+            if 'cves' in vuln and vuln['cves']:
+                for cve in vuln['cves']:
+                    cve_id = cve.get('cve') or cve.get('id')
+                    if cve_id:
+                        url = f"https://nvd.nist.gov/vuln/detail/{cve_id}"
+                        cve_list.append({'id': cve_id, 'url': url})
+            truncated_summary = summary[:150] + ('...' if len(summary) > 150 else '')
+            vuln_id = f'vuln_{safe_name}_{idx}'
+            details = 'No detailed information available.'
+            if 'jfrogResearchInformation' in vuln and vuln['jfrogResearchInformation'] and 'details' in vuln['jfrogResearchInformation']:
+                details = vuln['jfrogResearchInformation']['details']
+            issue_id = vuln.get('issueId', 'N/A')
+            references = vuln.get('references', [])
+            if references:
+                if len(references) > 15:
+                    references_text = '\n'.join(references[:15]) + f"\n... and {len(references) - 15} more references"
+                else:
+                    references_text = '\n'.join(references)
+            else:
+                references_text = 'None'
+            vuln_details.append({
+                'severity': severity,
+                'package': package,
+                'version': version,
+                'summary': truncated_summary,
+                'fixed': fixed,
+                'cves': ', '.join([badge['id'] for badge in cve_list]) if cve_list else 'N/A',
+                'cve_list': cve_list,
+                'vuln_id': vuln_id,
+                'details': details,
+                'issue_id': issue_id,
+                'references': references_text,
+            })
+
+        image_report = {
+            'image': image,
+            'safe_name': safe_name,
+            'critical_count': critical_count,
+            'high_count': high_count,
+            'medium_count': medium_count,
+            'low_count': low_count,
+            'unknown_count': unknown_count,
+            'vuln_details': vuln_details,
+        }
+        summary_row = {
+            'image': image,
+            'critical': critical_count,
+            'high': high_count,
+            'medium': medium_count,
+            'low': low_count,
+            'unknown': unknown_count,
+            'total': total_count,
+        }
+        logger.debug(f"Completed processing image '{image}'")
+        return (image_report, summary_row)
+    finally:
+        if cleanup and pulled_by_script and not was_local:
+            remove_image(image)
 
 def main():
     logger.info("Starting Yeedu JFrog Docker Vulnerability Scan")
 
-    # --- Argument parsing for --images ---
-    parser = argparse.ArgumentParser(description="Scan Docker images for vulnerabilities using JFrog Xray.")
+    # --- Argument parsing ---
+    parser = argparse.ArgumentParser(
+        description="Scan Docker images for vulnerabilities using JFrog Xray."
+    )
     parser.add_argument(
         "--images",
         nargs="+",
-        help="List of Docker images to scan (e.g. repo1:tag1 repo2:tag2). If not provided, all local images will be scanned."
+        help="List of Docker images to scan (e.g. repo1:tag1 repo2:tag2). If not provided and no --image-file is specified, all local images will be scanned."
+    )
+    parser.add_argument(
+        "--image-file",
+        help="Path to a text file containing image names/tags (one per line) to scan."
+    )
+    parser.add_argument(
+        "--severity",
+        nargs="+",
+        help="Filter vulnerabilities by severity (e.g. --severity critical high, or --severity critical,high). Supported values: critical, high, medium, low, unknown. Defaults to all severities."
+    )
+    parser.add_argument(
+        "--pull",
+        action="store_true",
+        help="Force pull latest images from the remote repository before scanning, even if already present locally."
+    )
+    parser.add_argument(
+        "--cleanup",
+        action="store_true",
+        help="Remove pulled images from local Docker storage after scanning (only cleans up images that were not present locally prior to the scan)."
+    )
+    parser.add_argument(
+        "--threads",
+        type=int,
+        default=4,
+        help="Number of concurrent image scans/pulls (default: 4)."
     )
     args = parser.parse_args()
+
+    # Parse and normalize severities
+    selected_severities = parse_severities(args.severity)
+    logger.info(f"Target severities: {', '.join(selected_severities)}")
 
     # Check dependencies
     if not check_command('jf'):
@@ -178,12 +330,24 @@ def main():
     now = datetime.now().strftime("%Y%m%d_%H%M%S")
     html_report = f"docker_security_scan_report_{now}.html"
 
-    # Get docker images
+    # Collect images
+    images = []
     if args.images:
-        images = args.images
-        logger.info(f"Scanning only provided images: {images}")
-    else:
-        logger.info("Retrieving Docker images...")
+        images.extend(args.images)
+    if args.image_file:
+        if not os.path.isfile(args.image_file):
+            logger.critical(f"Image file '{args.image_file}' not found. Exiting.")
+            print(f"Error: Image file '{args.image_file}' not found.")
+            shutil.rmtree(temp_dir)
+            sys.exit(1)
+        with open(args.image_file, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    images.append(line)
+
+    if not images:
+        logger.info("No specific images provided. Retrieving local Docker images...")
         images_str = run_cmd('docker images --format "{{.Repository}}:{{.Tag}}"')
         if not images_str:
             logger.warning("No Docker images found. Exiting.")
@@ -191,7 +355,11 @@ def main():
             shutil.rmtree(temp_dir)
             sys.exit(1)
         images = [img for img in images_str.splitlines() if "<none>" not in img]
-        logger.info(f"Found {len(images)} Docker images to scan.")
+        logger.info(f"Found {len(images)} local Docker images to scan.")
+    else:
+        # Deduplicate while preserving order
+        images = list(dict.fromkeys(images))
+        logger.info(f"Total target images to scan: {len(images)}")
 
     image_reports = []
     summary_table = []
@@ -204,9 +372,19 @@ def main():
     cve_counts = {}
 
     # Parallel scan
-    logger.info("Starting parallel scan of images...")
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = {executor.submit(scan_image, image, temp_dir): image for image in images}
+    logger.info(f"Starting parallel scan with concurrency limit: {args.threads}...")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.threads) as executor:
+        futures = {
+            executor.submit(
+                scan_image,
+                image,
+                temp_dir,
+                force_pull=args.pull,
+                cleanup=args.cleanup,
+                allowed_severities=selected_severities
+            ): image
+            for image in images
+        }
         for future in concurrent.futures.as_completed(futures):
             image = futures[future]
             try:
@@ -215,22 +393,19 @@ def main():
                 logger.error(f"Exception occurred while scanning image '{image}': {exc}")
                 continue
             if result is None:
-                logger.warning(f"Scan result for image '{image}' is None. Skipping.")
+                logger.warning(f"Scan result for image '{image}' is empty or failed. Skipping.")
                 continue
             image_report, summary_row = result
             image_reports.append(image_report)
             summary_table.append(summary_row)
-            # For dashboards: collect all vulnerabilities
+            # For dashboards: collect all filtered vulnerabilities
             for vuln in image_report['vuln_details']:
                 all_vulns.append(vuln)
                 sev = vuln['severity']
                 severity_counts[sev] = severity_counts.get(sev, 0) + 1
-                # Package type (e.g. "ubuntu" from "ubuntu:noble:libpam0g")
                 pkg_type = vuln['package'].split(':')[0] if ':' in vuln['package'] else vuln['package']
                 package_type_counts[pkg_type] = package_type_counts.get(pkg_type, 0) + 1
-                # Top packages
                 package_counts[vuln['package']] = package_counts.get(vuln['package'], 0) + 1
-                # Top CVEs
                 for cve in vuln.get('cve_list', []):
                     cve_id = cve['id']
                     cve_counts[cve_id] = cve_counts.get(cve_id, 0) + 1
@@ -239,6 +414,12 @@ def main():
             total_medium += summary_row['medium']
             total_low += summary_row['low']
             total_unknown += summary_row['unknown']
+
+    if not image_reports:
+        logger.warning("No images were successfully scanned. No report generated.")
+        print("No images were successfully scanned.")
+        shutil.rmtree(temp_dir)
+        sys.exit(0)
 
     # Sort image_reports and summary_table for consistent navigation
     image_reports.sort(key=lambda x: x['image'])
@@ -263,6 +444,8 @@ def main():
     )
     template = env.get_template("docker_security_scan_report_template.html")
 
+    chart_colors_json = json.dumps([SEVERITY_COLORS[s] for s in selected_severities])
+
     rendered = template.render(
         generated_on=datetime.now(),
         report_title="Yeedu Vulnerability Report",
@@ -274,6 +457,8 @@ def main():
         total_low=total_low,
         total_unknown=total_unknown,
         dashboard_stats=dashboard_stats,
+        selected_severities=selected_severities,
+        chart_colors_json=chart_colors_json,
     )
 
     with open(html_report, "w") as f:

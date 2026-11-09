@@ -16,11 +16,10 @@ body {
 .enterprise-header {
     background: linear-gradient(90deg, #232526 0%, #414345 100%);
     color: #fff;
-    padding: 48px 48px 24px 48px;
+    padding: 44px 48px 24px 48px;
     border-radius: 0 0 18px 18px;
     box-shadow: 0 6px 32px rgba(0,0,0,0.13);
-    margin-bottom: 40px;
-    letter-spacing: 0.01em;
+    margin-bottom: 32px;
 }
 .enterprise-header h1 {
     font-size: 2.3em;
@@ -29,14 +28,14 @@ body {
     letter-spacing: 0.02em;
 }
 .enterprise-header p {
-    font-size: 1.13em;
+    font-size: 1.1em;
     margin: 0;
     opacity: 0.93;
 }
 .dashboard-section {
     display: flex;
-    gap: 48px;
-    margin-bottom: 40px;
+    gap: 24px;
+    margin-bottom: 36px;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
@@ -44,139 +43,207 @@ body {
 }
 .dashboard-panel {
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
-    padding: 20px 28px 20px 28px;
-    margin-bottom: 20px;
-    min-width: 320px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    padding: 20px 24px;
+    margin-bottom: 8px;
+    min-width: 300px;
     flex: 1 1 320px;
-    max-width: 540px;
+    max-width: 520px;
 }
 .dashboard-panel h3 {
     margin-top: 0;
-    font-size: 1.12em;
-    font-weight: 600;
+    font-size: 1.1em;
+    font-weight: 700;
     color: #1a237e;
     margin-bottom: 14px;
-    letter-spacing: 0.01em;
+}
+.filter-bar-container {
+    padding: 0 48px;
+    margin-bottom: 24px;
+    position: sticky;
+    top: 48px;
+    z-index: 90;
 }
 .filter-bar {
     display: flex;
-    gap: 18px;
+    gap: 16px;
     align-items: center;
-    margin-bottom: 18px;
+    background: #ffffff;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
     flex-wrap: wrap;
 }
 .filter-bar label {
-    font-weight: 600;
-    margin-right: 6px;
+    font-weight: 700;
+    font-size: 0.95em;
+    color: #334155;
 }
 .filter-bar select, .filter-bar input {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #b0bec5;
-    font-size: 1em;
-    background: #f5f7fa;
-    margin-right: 8px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1.5px solid #cbd5e1;
+    font-size: 0.95em;
+    background: #f8fafc;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
-.filter-bar input[type="text"] {
-    min-width: 180px;
+.filter-bar select:focus, .filter-bar input:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25,118,210,0.15);
+}
+.filter-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.filter-pill-btn {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid #cbd5e1;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.88em;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #334155;
+}
+.filter-pill-btn:hover {
+    background: #eff6ff;
+    border-color: #1976d2;
+    color: #1976d2;
+}
+.filter-pill-btn.active {
+    background: #1976d2;
+    color: #fff;
+    border-color: #1976d2;
+    box-shadow: 0 2px 8px rgba(25,118,210,0.3);
+}
+.filter-status-badge {
+    margin-left: auto;
+    font-size: 0.92em;
+    font-weight: 600;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+.summary-table-section {
+    padding: 0 48px 32px 48px;
+}
+.summary-table-section h2, .vuln-section h2 {
+    color: #1a237e;
+    font-size: 1.45em;
+    margin-bottom: 14px;
 }
 .enterprise-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     background: #fff;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-    border-radius: 14px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.06);
+    border-radius: 12px;
     overflow-x: auto;
 }
 .enterprise-table th, .enterprise-table td {
-    padding: 13px 18px;
-    border-bottom: 1px solid #e3e7ee;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
     text-align: left;
-    font-size: 1em;
+    font-size: 0.96em;
 }
 .enterprise-table th {
-    background: #f5f7fa;
-    color: #232526;
+    background: #f8fafc;
+    color: #1e293b;
     font-weight: 700;
     position: sticky;
     top: 0;
     z-index: 2;
-    letter-spacing: 0.02em;
     border-top: none;
 }
 .enterprise-table tr:last-child td {
     border-bottom: none;
 }
-.enterprise-table tr:hover {
-    background: #f3f6fa;
-    transition: background 0.18s;
+.enterprise-table tr.vuln-row:hover {
+    background: #f1f5f9;
+    transition: background 0.15s;
 }
 .severity-chip {
     display: inline-block;
-    padding: 5px 16px;
-    border-radius: 14px;
-    font-size: 0.98em;
-    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 12px;
+    font-size: 0.9em;
+    font-weight: 700;
     color: #fff;
     letter-spacing: 0.01em;
-    box-shadow: none;
-    margin-right: 2px;
 }
 .severity-Critical { background: #b71c1c; }
 .severity-High { background: #e65100; }
-.severity-Medium { background: #fbc02d; color: #232526; }
-.severity-Low { background: #388e3c; }
+.severity-Medium { background: #fbc02d; color: #1e293b; }
+.severity-Low { background: #2e7d32; }
 .severity-Unknown { background: #546e7a; }
+
 .cve-badge {
     display: inline-block;
     background: #1976d2;
     color: #fff;
-    border-radius: 7px;
-    padding: 3px 10px;
+    border-radius: 6px;
+    padding: 3px 8px;
     margin: 2px 4px 2px 0;
-    font-size: 0.97em;
+    font-size: 0.92em;
     font-weight: 600;
     text-decoration: none;
-    box-shadow: none;
-    transition: background 0.2s, color 0.2s;
-    letter-spacing: 0.01em;
+    transition: background 0.2s;
 }
 .cve-badge:hover {
     background: #0d47a1;
-    color: #fff;
     text-decoration: underline;
 }
 .cve-na {
-    background: #bdbdbd !important;
+    background: #94a3b8 !important;
     color: #fff !important;
 }
-.legend {
-    margin: 24px 0 16px 0;
-    font-size: 1.09em;
-    padding: 0 48px;
+.toggleButton {
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.88em;
+    font-weight: 600;
+    transition: background 0.2s;
 }
-.legend span {
-    margin-right: 32px;
-    padding-left: 26px;
-    position: relative;
+.toggleButton:hover {
+    background: #0d47a1;
 }
-.legend .severity-chip {
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: translateY(-2px);
+.details-row {
+    background: #f8fafc;
+}
+.details-box {
+    padding: 16px 20px;
+    border-left: 4px solid #1976d2;
+    background: #ffffff;
+    border-radius: 0 8px 8px 0;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    margin: 4px 0;
+    font-size: 0.94em;
+    line-height: 1.6;
+    word-break: break-word;
 }
 .back-to-top {
     display: inline-block;
     margin-top: 14px;
     color: #1976d2;
     text-decoration: none;
-    font-size: 1.05em;
+    font-size: 1em;
     font-weight: 600;
-    padding-left: 48px;
 }
 .back-to-top:hover {
     text-decoration: underline;
@@ -184,26 +251,26 @@ body {
 .image-nav {
     position: sticky;
     top: 0;
-    background: #232526;
+    background: #1e293b;
     color: #fff;
     padding: 12px 0 12px 48px;
     z-index: 100;
     overflow-x: auto;
     white-space: nowrap;
-    font-size: 1.08em;
+    font-size: 1.02em;
     font-weight: 600;
-    border-bottom: 1px solid #1976d2;
-    margin-bottom: 0;
+    border-bottom: 2px solid #1976d2;
+    margin-bottom: 24px;
 }
 .image-nav a {
-    color: #1976d2;
+    color: #93c5fd;
     margin-right: 24px;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
 }
 .image-nav a:hover {
-    color: #0d47a1;
+    color: #ffffff;
     text-decoration: underline;
 }
 html {
@@ -212,374 +279,309 @@ html {
 .vuln-table-scroll {
     overflow-x: auto;
     width: 100%;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
 }
 section[id^="img-"] {
-    padding: 0 48px 36px 48px;
+    padding: 0 48px 32px 48px;
+}
+.empty-chart-msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 0.96em;
 }
 @media (max-width: 900px) {
-    .dashboard-section, .summary-table-section, .legend, section[id^="img-"], .enterprise-header, .back-to-top {
+    .dashboard-section, .summary-table-section, .filter-bar-container, section[id^="img-"], .enterprise-header {
         padding-left: 16px !important;
         padding-right: 16px !important;
     }
-    .dashboard-section {
-        gap: 18px;
+    .filter-bar {
+        padding: 14px 16px;
     }
-    .enterprise-header {
-        padding: 28px 12px 12px 12px;
+    .image-nav {
+        padding-left: 16px;
     }
 }
     </style>
-    <script>
-        google.charts.load('current', {'packages':['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawDashboards);
-
-        function drawDashboards() {
-            // Pie chart for overall
-            var pieData = google.visualization.arrayToDataTable([
-                ['Severity', 'Count'],
-                ['Critical', {{ total_critical }}],
-                ['High', {{ total_high }}],
-                ['Medium', {{ total_medium }}],
-                ['Low', {{ total_low }}],
-                ['Unknown', {{ total_unknown }}]
-            ]);
-            var pieOptions = {
-                title: 'Overall Vulnerability Severity',
-                is3D: true,
-                colors: ['#c62828', '#ef6c00', '#fbc02d', '#388e3c', '#1976d2']
-            };
-            var pieChart = new google.visualization.PieChart(document.getElementById('overall_piechart'));
-            pieChart.draw(pieData, pieOptions);
-
-            // Bar chart for per-image total
-            var barData = google.visualization.arrayToDataTable([
-                ['Image', 'Critical', 'High', 'Medium', 'Low', 'Unknown'],
-                {% for row in summary_table %}
-                ['{{ row.image }}', {{ row.critical }}, {{ row.high }}, {{ row.medium }}, {{ row.low }}, {{ row.unknown }}],
-                {% endfor %}
-            ]);
-            var barOptions = {
-                title: 'Vulnerabilities per Image (by Severity)',
-                isStacked: true,
-                colors: ['#c62828', '#ef6c00', '#fbc02d', '#388e3c', '#1976d2'],
-                legend: { position: 'top', maxLines: 3 },
-                bar: { groupWidth: '75%' }
-            };
-            var barChart = new google.visualization.ColumnChart(document.getElementById('image_barchart'));
-            barChart.draw(barData, barOptions);
-        }
-        function toggleDetails(id) {
-            var element = document.getElementById(id);
-            if (element.style.display === "none" || element.style.display === "") {
-                element.style.display = "block";
-            } else {
-                element.style.display = "none";
-            }
-        }
-        function filterTable(tableId, severity) {
-            var table = document.getElementById(tableId);
-            var rows = table.getElementsByTagName("tr");
-            for (var i = 1; i < rows.length; i++) {
-                var row = rows[i];
-                if (row.getElementsByTagName("td").length === 0) continue;
-                if (row.getElementsByTagName("td").length === 1) continue;
-                var rowSeverity = row.getElementsByTagName("td")[0].textContent;
-                if (severity === "All" || rowSeverity === severity) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                    if (i+1 < rows.length && rows[i+1].getElementsByTagName("td").length === 1) {
-                        rows[i+1].style.display = "none";
-                        i++;
-                    }
-                }
-            }
-        }
-        function searchTable(tableId) {
-            var input = document.getElementById("searchInput_" + tableId);
-            var filter = input.value.toUpperCase();
-            var table = document.getElementById(tableId);
-            var rows = table.getElementsByTagName("tr");
-            for (var i = 1; i < rows.length; i++) {
-                var row = rows[i];
-                if (row.getElementsByTagName("td").length <= 1) continue;
-                var cells = row.getElementsByTagName("td");
-                var found = false;
-                for (var j = 0; j < cells.length; j++) {
-                    var cell = cells[j];
-                    if (cell) {
-                        var txtValue = cell.textContent || cell.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            found = true;
-                            break;
-                        }
-                    }
-                }
-                if (found) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                    if (i+1 < rows.length && rows[i+1].getElementsByTagName("td").length == 1) {
-                        rows[i+1].style.display = "none";
-                        i++;
-                    }
-                }
-            }
-        }
-    </script>
-</head>
-<body>
-    <div class="enterprise-header" id="top">
-        <h1>{{ report_title }}</h1>
-        <p>Generated on: {{ generated_on }}</p>
-    </div>
-    <nav class="image-nav">
-        <strong>Jump to Image:</strong>
-        {% for row in summary_table %}
-            <a href="#img-{{ loop.index0 }}">{{ row.image }}</a>
-        {% endfor %}
-    </nav>
-    <div class="dashboard-section">
-        <div class="dashboard-panel">
-            <h3>Overall Severity Distribution</h3>
-            <div id="overall_piechart" style="width: 340px; height: 260px;"></div>
-        </div>
-        <div class="dashboard-panel">
-            <h3>Vulnerabilities per Image (Stacked Bar)</h3>
-            <div id="image_barchart" style="width: 480px; height: 260px;"></div>
-        </div>
-        <div class="dashboard-panel">
-            <h3>Top Vulnerable Packages</h3>
-            <div id="top_packages_chart" style="width: 340px; height: 260px;"></div>
-        </div>
-        <div class="dashboard-panel">
-            <h3>Top CVEs</h3>
-            <div id="top_cves_chart" style="width: 340px; height: 260px;"></div>
-        </div>
-        <div class="dashboard-panel">
-            <h3>Vulnerabilities by Package Type</h3>
-            <div id="package_type_chart" style="width: 340px; height: 260px;"></div>
-        </div>
-        <div class="dashboard-panel">
-            <h3>Totals</h3>
-            <ul style="font-size:1.15em;line-height:2;margin:0;padding:0;list-style:none;">
-                <li><b>Total Vulnerabilities:</b> {{ dashboard_stats.total_vulns }}</li>
-                <li><span class="severity-chip severity-Critical"></span> <b>Critical:</b> {{ dashboard_stats.severity_counts['Critical'] if 'Critical' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-High"></span> <b>High:</b> {{ dashboard_stats.severity_counts['High'] if 'High' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-Medium"></span> <b>Medium:</b> {{ dashboard_stats.severity_counts['Medium'] if 'Medium' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-Low"></span> <b>Low:</b> {{ dashboard_stats.severity_counts['Low'] if 'Low' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-Unknown"></span> <b>Unknown:</b> {{ dashboard_stats.severity_counts['Unknown'] if 'Unknown' in dashboard_stats.severity_counts else 0 }}</li>
-            </ul>
-        </div>
-    </div>
     <script type="text/javascript">
+        // Load Google Charts
         google.charts.load('current', {'packages':['corechart', 'bar']});
         google.charts.setOnLoadCallback(drawDashboards);
 
         function drawDashboards() {
-            // Pie chart for overall
+            var chartColors = {{ chart_colors_json | safe }};
+
+            // 1. Overall Severity Distribution Pie Chart
+            var pieContainer = document.getElementById('overall_piechart');
+            {% if dashboard_stats.total_vulns > 0 %}
             var pieData = google.visualization.arrayToDataTable([
                 ['Severity', 'Count'],
-                ['Critical', {{ dashboard_stats.severity_counts['Critical'] if 'Critical' in dashboard_stats.severity_counts else 0 }}],
-                ['High', {{ dashboard_stats.severity_counts['High'] if 'High' in dashboard_stats.severity_counts else 0 }}],
-                ['Medium', {{ dashboard_stats.severity_counts['Medium'] if 'Medium' in dashboard_stats.severity_counts else 0 }}],
-                ['Low', {{ dashboard_stats.severity_counts['Low'] if 'Low' in dashboard_stats.severity_counts else 0 }}],
-                ['Unknown', {{ dashboard_stats.severity_counts['Unknown'] if 'Unknown' in dashboard_stats.severity_counts else 0 }}]
+                {% for s in selected_severities %}
+                ['{{ s }}', {{ dashboard_stats.severity_counts[s] if s in dashboard_stats.severity_counts else 0 }}]{% if not loop.last %},{% endif %}
+                {% endfor %}
             ]);
             var pieOptions = {
                 title: '',
                 is3D: true,
                 legend: { position: 'right' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#c62828', '#ef6c00', '#fbc02d', '#388e3c', '#1976d2']
+                chartArea: { width: '85%', height: '85%' },
+                colors: chartColors
             };
-            var pieChart = new google.visualization.PieChart(document.getElementById('overall_piechart'));
+            var pieChart = new google.visualization.PieChart(pieContainer);
             pieChart.draw(pieData, pieOptions);
+            {% else %}
+            pieContainer.innerHTML = '<div class="empty-chart-msg">No vulnerabilities found</div>';
+            {% endif %}
 
-            // Bar chart for per-image total
+            // 2. Vulnerabilities per Image (Stacked Bar)
+            var barContainer = document.getElementById('image_barchart');
+            {% if summary_table and dashboard_stats.total_vulns > 0 %}
             var barData = google.visualization.arrayToDataTable([
-                ['Image', 'Critical', 'High', 'Medium', 'Low', 'Unknown'],
+                ['Image', {% for s in selected_severities %}'{{ s }}'{% if not loop.last %}, {% endif %}{% endfor %}],
                 {% for row in summary_table %}
-                ['{{ row.image }}', {{ row.critical }}, {{ row.high }}, {{ row.medium }}, {{ row.low }}, {{ row.unknown }}],
+                ['{{ row.image | replace("'", "\\'") }}', {% for s in selected_severities %}{{ row[s.lower()] }}{% if not loop.last %}, {% endif %}{% endfor %}]{% if not loop.last %},{% endif %}
                 {% endfor %}
             ]);
             var barOptions = {
                 title: '',
                 isStacked: true,
-                legend: { position: 'top', maxLines: 3 },
-                bar: { groupWidth: '75%' },
-                chartArea: { width: '80%', height: '70%' },
-                colors: ['#c62828', '#ef6c00', '#fbc02d', '#388e3c', '#1976d2']
+                legend: { position: 'top', maxLines: 2 },
+                bar: { groupWidth: '65%' },
+                chartArea: { width: '75%', height: '65%' },
+                colors: chartColors
             };
-            var barChart = new google.visualization.ColumnChart(document.getElementById('image_barchart'));
+            var barChart = new google.visualization.ColumnChart(barContainer);
             barChart.draw(barData, barOptions);
+            {% else %}
+            barContainer.innerHTML = '<div class="empty-chart-msg">No vulnerabilities found</div>';
+            {% endif %}
 
-            // Top vulnerable packages (by count)
-            var topPkgData = [['Package', 'Vuln Count']
+            // 3. Top Vulnerable Packages
+            var topPkgContainer = document.getElementById('top_packages_chart');
+            {% if dashboard_stats.top_packages %}
+            var topPkgData = google.visualization.arrayToDataTable([
+                ['Package', 'Count'],
                 {% for pkg, count in dashboard_stats.top_packages %}
-                    ,['{{ pkg }}', {{ count }}]
+                ['{{ pkg | replace("'", "\\'") }}', {{ count }}]{% if not loop.last %},{% endif %}
                 {% endfor %}
-            ];
-            var topPkgChart = new google.visualization.BarChart(document.getElementById('top_packages_chart'));
-            topPkgChart.draw(google.visualization.arrayToDataTable(topPkgData), {
+            ]);
+            var topPkgChart = new google.visualization.BarChart(topPkgContainer);
+            topPkgChart.draw(topPkgData, {
                 legend: { position: 'none' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#c62828'],
+                chartArea: { width: '70%', height: '80%' },
+                colors: ['#b71c1c'],
                 hAxis: { minValue: 0 }
             });
+            {% else %}
+            topPkgContainer.innerHTML = '<div class="empty-chart-msg">No vulnerable packages</div>';
+            {% endif %}
 
-            // Top CVEs (by count)
-            var topCveData = [['CVE', 'Vuln Count']
+            // 4. Top CVEs
+            var topCveContainer = document.getElementById('top_cves_chart');
+            {% if dashboard_stats.top_cves %}
+            var topCveData = google.visualization.arrayToDataTable([
+                ['CVE', 'Count'],
                 {% for cve, count in dashboard_stats.top_cves %}
-                    ,['{{ cve }}', {{ count }}]
+                ['{{ cve | replace("'", "\\'") }}', {{ count }}]{% if not loop.last %},{% endif %}
                 {% endfor %}
-            ];
-            var topCveChart = new google.visualization.BarChart(document.getElementById('top_cves_chart'));
-            topCveChart.draw(google.visualization.arrayToDataTable(topCveData), {
+            ]);
+            var topCveChart = new google.visualization.BarChart(topCveContainer);
+            topCveChart.draw(topCveData, {
                 legend: { position: 'none' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#ef6c00'],
+                chartArea: { width: '70%', height: '80%' },
+                colors: ['#e65100'],
                 hAxis: { minValue: 0 }
             });
+            {% else %}
+            topCveContainer.innerHTML = '<div class="empty-chart-msg">No CVEs found</div>';
+            {% endif %}
 
-            // Vulnerabilities by package type
-            var typeData = [['Type', 'Vuln Count']
+            // 5. Vulnerabilities by Package Type
+            var typeContainer = document.getElementById('package_type_chart');
+            {% if dashboard_stats.package_type_counts %}
+            var typeData = google.visualization.arrayToDataTable([
+                ['Type', 'Count'],
                 {% for ptype, count in dashboard_stats.package_type_counts.items() %}
-                    ,['{{ ptype }}', {{ count }}]
+                ['{{ ptype | replace("'", "\\'") }}', {{ count }}]{% if not loop.last %},{% endif %}
                 {% endfor %}
-            ];
-            var typeChart = new google.visualization.PieChart(document.getElementById('package_type_chart'));
-            typeChart.draw(google.visualization.arrayToDataTable(typeData), {
+            ]);
+            var typeChart = new google.visualization.PieChart(typeContainer);
+            typeChart.draw(typeData, {
                 legend: { position: 'right' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#388e3c', '#fbc02d', '#ef6c00', '#c62828', '#1976d2', '#7e57c2', '#8d6e63']
+                chartArea: { width: '85%', height: '85%' },
+                colors: ['#2e7d32', '#fbc02d', '#e65100', '#b71c1c', '#1976d2', '#7e57c2', '#8d6e63']
             });
+            {% else %}
+            typeContainer.innerHTML = '<div class="empty-chart-msg">No package types found</div>';
+            {% endif %}
         }
-        function toggleDetails(id) {
-            var element = document.getElementById(id);
-            if (element.style.display === "none" || element.style.display === "") {
-                element.style.display = "block";
-            } else {
-                element.style.display = "none";
+
+        // --- Details Toggle Function ---
+        function toggleDetails(vulnId) {
+            var detailsRow = document.getElementById('details-row-' + vulnId);
+            if (!detailsRow) return;
+            var isHidden = (detailsRow.style.display === 'none' || detailsRow.style.display === '');
+            detailsRow.style.display = isHidden ? 'table-row' : 'none';
+        }
+
+        // --- Quick Severity Filter Button Handler ---
+        function setSeverityFilter(sev) {
+            var select = document.getElementById('global-severity-filter');
+            if (select) {
+                select.value = sev;
+                applyGlobalFilter();
             }
         }
-        function filterTable(tableId, severity) {
-            var table = document.getElementById(tableId);
-            var rows = table.getElementsByTagName("tr");
-            for (var i = 1; i < rows.length; i++) {
-                var row = rows[i];
-                if (row.getElementsByTagName("td").length === 0) continue;
-                if (row.getElementsByTagName("td").length === 1) continue;
-                var rowSeverity = row.getElementsByTagName("td")[0].textContent;
-                if (severity === "All" || rowSeverity === severity) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                    if (i+1 < rows.length && rows[i+1].getElementsByTagName("td").length === 1) {
-                        rows[i+1].style.display = "none";
-                        i++;
-                    }
+
+        // --- Global Filter Implementation ---
+        function applyGlobalFilter() {
+            var severitySelect = document.getElementById('global-severity-filter');
+            var selectedSeverity = severitySelect ? severitySelect.value : 'All';
+
+            var imageSelect = document.getElementById('global-image-filter');
+            var selectedImage = imageSelect ? imageSelect.value : 'All';
+
+            var searchInput = document.getElementById('global-search-filter');
+            var searchText = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+            var totalVisible = 0;
+            var totalCount = 0;
+
+            var sections = document.querySelectorAll('.vuln-section');
+
+            sections.forEach(function(section) {
+                var sectionImage = section.getAttribute('data-image');
+                if (selectedImage !== 'All' && sectionImage !== selectedImage) {
+                    section.style.display = 'none';
+                    return;
                 }
-            }
-        }
-        function searchTable(tableId) {
-            var input = document.getElementById("searchInput_" + tableId);
-            var filter = input.value.toUpperCase();
-            var table = document.getElementById(tableId);
-            var rows = table.getElementsByTagName("tr");
-            for (var i = 1; i < rows.length; i++) {
-                var row = rows[i];
-                if (row.getElementsByTagName("td").length <= 1) continue;
-                var cells = row.getElementsByTagName("td");
-                var found = false;
-                for (var j = 0; j < cells.length; j++) {
-                    var cell = cells[j];
-                    if (cell) {
-                        var txtValue = cell.textContent || cell.innerText;
-                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                            found = true;
-                            break;
+                section.style.display = '';
+
+                var table = section.querySelector('.vuln-table');
+                if (!table) return;
+
+                var tbody = table.querySelector('tbody');
+                var rows = tbody.querySelectorAll('.vuln-row');
+                var sectionVisible = 0;
+
+                rows.forEach(function(row) {
+                    totalCount++;
+                    var rowSeverity = row.getAttribute('data-severity') || '';
+                    var vulnId = row.getAttribute('data-vulnid');
+                    var detailsRow = document.getElementById('details-row-' + vulnId);
+
+                    var matchesSeverity = (selectedSeverity === 'All' || rowSeverity === selectedSeverity);
+                    var matchesSearch = true;
+                    if (searchText) {
+                        var rowText = row.textContent.toLowerCase();
+                        matchesSearch = (rowText.indexOf(searchText) !== -1);
+                    }
+
+                    if (matchesSeverity && matchesSearch) {
+                        row.style.display = '';
+                        sectionVisible++;
+                        totalVisible++;
+                    } else {
+                        row.style.display = 'none';
+                        if (detailsRow) {
+                            detailsRow.style.display = 'none';
                         }
                     }
-                }
-                if (found) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                    if (i+1 < rows.length && rows[i+1].getElementsByTagName("td").length == 1) {
-                        rows[i+1].style.display = "none";
-                        i++;
+                });
+
+                // Update or create "No matching vulnerabilities" placeholder row
+                var emptyRow = tbody.querySelector('.no-filter-match-row');
+                if (sectionVisible === 0) {
+                    if (!emptyRow) {
+                        emptyRow = document.createElement('tr');
+                        emptyRow.className = 'no-filter-match-row';
+                        var desc = (selectedSeverity !== 'All') ? selectedSeverity : 'current search criteria';
+                        emptyRow.innerHTML = '<td colspan="7" style="text-align:center; padding:18px; color:#64748b; font-style:italic;">No vulnerabilities found matching: <b>' + desc + '</b></td>';
+                        tbody.appendChild(emptyRow);
+                    } else {
+                        var desc = (selectedSeverity !== 'All') ? selectedSeverity : 'current search criteria';
+                        emptyRow.querySelector('td').innerHTML = 'No vulnerabilities found matching: <b>' + desc + '</b>';
+                        emptyRow.style.display = '';
                     }
+                } else if (emptyRow) {
+                    emptyRow.style.display = 'none';
                 }
+            });
+
+            // Update live counter badge
+            var statusElem = document.getElementById('filter-status-text');
+            if (statusElem) {
+                statusElem.textContent = 'Showing ' + totalVisible + ' of ' + totalCount + ' vulnerabilities';
             }
+
+            // Update active pill button styling
+            document.querySelectorAll('.filter-pill-btn').forEach(function(btn) {
+                if (btn.getAttribute('data-sev') === selectedSeverity) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
         }
     </script>
 </head>
 <body>
     <div class="enterprise-header" id="top">
         <h1>{{ report_title }}</h1>
-        <p>Generated on: {{ generated_on }}</p>
+        <p>
+            Generated on: {{ generated_on.strftime('%Y-%m-%d %H:%M:%S') if generated_on.strftime is defined else generated_on }}
+            &nbsp;|&nbsp; Severity Scope: 
+            {% for s in selected_severities %}
+                <span class="severity-chip severity-{{ s }}" style="padding: 2px 10px; font-size: 0.85em;">{{ s }}</span>
+            {% endfor %}
+        </p>
     </div>
+
     <nav class="image-nav">
         <strong>Jump to Image:</strong>
         {% for row in summary_table %}
             <a href="#img-{{ loop.index0 }}">{{ row.image }}</a>
         {% endfor %}
     </nav>
+
     <div class="dashboard-section">
         <div class="dashboard-panel">
             <h3>Overall Severity Distribution</h3>
-            <div id="overall_piechart" style="width: 340px; height: 260px;"></div>
+            <div id="overall_piechart" style="width: 100%; height: 260px;"></div>
         </div>
         <div class="dashboard-panel">
             <h3>Vulnerabilities per Image (Stacked Bar)</h3>
-            <div id="image_barchart" style="width: 480px; height: 260px;"></div>
+            <div id="image_barchart" style="width: 100%; height: 260px;"></div>
         </div>
         <div class="dashboard-panel">
             <h3>Top Vulnerable Packages</h3>
-            <div id="top_packages_chart" style="width: 340px; height: 260px;"></div>
+            <div id="top_packages_chart" style="width: 100%; height: 260px;"></div>
         </div>
         <div class="dashboard-panel">
             <h3>Top CVEs</h3>
-            <div id="top_cves_chart" style="width: 340px; height: 260px;"></div>
+            <div id="top_cves_chart" style="width: 100%; height: 260px;"></div>
         </div>
         <div class="dashboard-panel">
             <h3>Vulnerabilities by Package Type</h3>
-            <div id="package_type_chart" style="width: 340px; height: 260px;"></div>
+            <div id="package_type_chart" style="width: 100%; height: 260px;"></div>
         </div>
         <div class="dashboard-panel">
             <h3>Totals</h3>
             <ul style="font-size:1.15em;line-height:2;margin:0;padding:0;list-style:none;">
                 <li><b>Total Vulnerabilities:</b> {{ dashboard_stats.total_vulns }}</li>
-                <li><span class="severity-chip severity-Critical"></span> <b>Critical:</b> {{ dashboard_stats.severity_counts['Critical'] if 'Critical' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-High"></span> <b>High:</b> {{ dashboard_stats.severity_counts['High'] if 'High' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-Medium"></span> <b>Medium:</b> {{ dashboard_stats.severity_counts['Medium'] if 'Medium' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-Low"></span> <b>Low:</b> {{ dashboard_stats.severity_counts['Low'] if 'Low' in dashboard_stats.severity_counts else 0 }}</li>
-                <li><span class="severity-chip severity-Unknown"></span> <b>Unknown:</b> {{ dashboard_stats.severity_counts['Unknown'] if 'Unknown' in dashboard_stats.severity_counts else 0 }}</li>
+                {% for s in selected_severities %}
+                <li>
+                    <span class="severity-chip severity-{{ s }}"></span>
+                    <b>{{ s }}:</b> {{ dashboard_stats.severity_counts[s] if s in dashboard_stats.severity_counts else 0 }}
+                </li>
+                {% endfor %}
             </ul>
         </div>
     </div>
-    <div class="filter-bar" id="global-filter-bar">
-        <label for="global-severity-filter">Filter by Severity:</label>
-        <select id="global-severity-filter" onchange="applyGlobalFilter()">
-            <option value="All">All</option>
-            <option value="Critical">Critical</option>
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-            <option value="Unknown">Unknown</option>
-        </select>
-        <label for="global-image-filter">Image:</label>
-        <select id="global-image-filter" onchange="applyGlobalFilter()">
-            <option value="All">All</option>
-            {% for report in image_reports %}
-                <option value="{{ report.safe_name }}">{{ report.image }}</option>
-            {% endfor %}
-        </select>
-        <label for="global-search-filter">Search:</label>
-        <input type="text" id="global-search-filter" onkeyup="applyGlobalFilter()" placeholder="Search vulnerabilities...">
-    </div>
+
     <div class="summary-table-section">
         <h2>Image Vulnerability Summary</h2>
         <div class="vuln-table-scroll">
@@ -588,11 +590,9 @@ section[id^="img-"] {
                 <tr>
                     <th>Image</th>
                     <th>Total</th>
-                    <th>Critical</th>
-                    <th>High</th>
-                    <th>Medium</th>
-                    <th>Low</th>
-                    <th>Unknown</th>
+                    {% for s in selected_severities %}
+                    <th>{{ s }}</th>
+                    {% endfor %}
                 </tr>
             </thead>
             <tbody>
@@ -600,17 +600,55 @@ section[id^="img-"] {
                 <tr>
                     <td><a href="#img-{{ loop.index0 }}">{{ row.image }}</a></td>
                     <td><b>{{ row.total }}</b></td>
-                    <td><span class="severity-chip severity-Critical">{{ row.critical }}</span></td>
-                    <td><span class="severity-chip severity-High">{{ row.high }}</span></td>
-                    <td><span class="severity-chip severity-Medium">{{ row.medium }}</span></td>
-                    <td><span class="severity-chip severity-Low">{{ row.low }}</span></td>
-                    <td><span class="severity-chip severity-Unknown">{{ row.unknown }}</span></td>
+                    {% for s in selected_severities %}
+                    <td><span class="severity-chip severity-{{ s }}">{{ row[s.lower()] }}</span></td>
+                    {% endfor %}
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         </div>
     </div>
+
+    <!-- Interactive Filter Bar -->
+    <div class="filter-bar-container">
+        <div class="filter-bar" id="global-filter-bar">
+            <label>Filter Severity:</label>
+            <div class="filter-pills">
+                <button type="button" class="filter-pill-btn active" data-sev="All" onclick="setSeverityFilter('All')">
+                    All
+                </button>
+                {% for s in selected_severities %}
+                <button type="button" class="filter-pill-btn" data-sev="{{ s }}" onclick="setSeverityFilter('{{ s }}')">
+                    <span class="severity-chip severity-{{ s }}" style="padding: 2px 7px; font-size: 0.8em;"></span> {{ s }}
+                </button>
+                {% endfor %}
+            </div>
+
+            <select id="global-severity-filter" onchange="applyGlobalFilter()" style="display:none;">
+                <option value="All">All</option>
+                {% for s in selected_severities %}
+                    <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="global-image-filter" style="margin-left: 12px;">Image:</label>
+            <select id="global-image-filter" onchange="applyGlobalFilter()">
+                <option value="All">All Images</option>
+                {% for report in image_reports %}
+                    <option value="{{ report.safe_name }}">{{ report.image }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="global-search-filter" style="margin-left: 12px;">Search:</label>
+            <input type="text" id="global-search-filter" onkeyup="applyGlobalFilter()" placeholder="Package, CVE, summary...">
+
+            <span class="filter-status-badge" id="filter-status-text">
+                Showing {{ dashboard_stats.total_vulns }} vulnerabilities
+            </span>
+        </div>
+    </div>
+
     {% for report in image_reports %}
         <section id="img-{{ loop.index0 }}" class="vuln-section" data-image="{{ report.safe_name }}">
             <h2>{{ report.image }}</h2>
@@ -629,9 +667,9 @@ section[id^="img-"] {
                 </thead>
                 <tbody>
                 {% for vuln in report.vuln_details %}
-                    <tr class="vuln-row severity-{{ vuln.severity }} image-{{ report.safe_name }}">
+                    <tr class="vuln-row" data-severity="{{ vuln.severity }}" data-image="{{ report.safe_name }}" data-vulnid="{{ vuln.vuln_id }}">
                         <td><span class="severity-chip severity-{{ vuln.severity }}">{{ vuln.severity }}</span></td>
-                        <td>{{ vuln.package }}</td>
+                        <td><b>{{ vuln.package }}</b></td>
                         <td>{{ vuln.version }}</td>
                         <td>{{ vuln.summary }}</td>
                         <td>{{ vuln.fixed }}</td>
@@ -648,161 +686,31 @@ section[id^="img-"] {
                             <button class="toggleButton" onclick="toggleDetails('{{ vuln.vuln_id }}')">Details</button>
                         </td>
                     </tr>
-                    <tr class="details-row image-{{ report.safe_name }}">
+                    <tr class="details-row" id="details-row-{{ vuln.vuln_id }}" style="display:none;" data-severity="{{ vuln.severity }}" data-image="{{ report.safe_name }}">
                         <td colspan="7">
-                            <div id="{{ vuln.vuln_id }}" class="details" style="display:none;">
+                            <div class="details-box">
                                 <strong>Issue ID:</strong> {{ vuln.issue_id }}<br>
                                 <strong>Details:</strong><br>
                                 {{ vuln.details }}
                                 <br><br>
                                 <strong>References:</strong><br>
-                                {{ vuln.references }}
+                                <pre style="margin:6px 0 0 0; font-family:monospace; font-size:0.92em; white-space:pre-wrap;">{{ vuln.references }}</pre>
                             </div>
                         </td>
                     </tr>
                 {% endfor %}
                 {% if report.vuln_details|length == 0 %}
                     <tr>
-                        <td colspan="7">No vulnerabilities found</td>
+                        <td colspan="7" style="text-align:center; color:#64748b; font-style:italic; padding: 20px;">
+                            No vulnerabilities found
+                        </td>
                     </tr>
                 {% endif %}
                 </tbody>
             </table>
             </div>
-            <a href="#top" class="back-to-top">Back to Top</a>
+            <a href="#top" class="back-to-top">Back to Top &uarr;</a>
         </section>
     {% endfor %}
-    <script type="text/javascript">
-        google.charts.load('current', {'packages':['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawDashboards);
-
-        function drawDashboards() {
-            // Pie chart for overall
-            var pieData = google.visualization.arrayToDataTable([
-                ['Severity', 'Count'],
-                ['Critical', {{ dashboard_stats.severity_counts['Critical'] if 'Critical' in dashboard_stats.severity_counts else 0 }}],
-                ['High', {{ dashboard_stats.severity_counts['High'] if 'High' in dashboard_stats.severity_counts else 0 }}],
-                ['Medium', {{ dashboard_stats.severity_counts['Medium'] if 'Medium' in dashboard_stats.severity_counts else 0 }}],
-                ['Low', {{ dashboard_stats.severity_counts['Low'] if 'Low' in dashboard_stats.severity_counts else 0 }}],
-                ['Unknown', {{ dashboard_stats.severity_counts['Unknown'] if 'Unknown' in dashboard_stats.severity_counts else 0 }}]
-            ]);
-            var pieOptions = {
-                title: '',
-                is3D: true,
-                legend: { position: 'right' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#c62828', '#ef6c00', '#fbc02d', '#388e3c', '#1976d2']
-            };
-            var pieChart = new google.visualization.PieChart(document.getElementById('overall_piechart'));
-            pieChart.draw(pieData, pieOptions);
-
-            // Bar chart for per-image total
-            var barData = google.visualization.arrayToDataTable([
-                ['Image', 'Critical', 'High', 'Medium', 'Low', 'Unknown'],
-                {% for row in summary_table %}
-                ['{{ row.image }}', {{ row.critical }}, {{ row.high }}, {{ row.medium }}, {{ row.low }}, {{ row.unknown }}],
-                {% endfor %}
-            ]);
-            var barOptions = {
-                title: '',
-                isStacked: true,
-                legend: { position: 'top', maxLines: 3 },
-                bar: { groupWidth: '75%' },
-                chartArea: { width: '80%', height: '70%' },
-                colors: ['#c62828', '#ef6c00', '#fbc02d', '#388e3c', '#1976d2']
-            };
-            var barChart = new google.visualization.ColumnChart(document.getElementById('image_barchart'));
-            barChart.draw(barData, barOptions);
-
-            // Top vulnerable packages (by count)
-            var topPkgData = [['Package', 'Vuln Count']
-                {% for pkg, count in dashboard_stats.top_packages %}
-                    ,['{{ pkg }}', {{ count }}]
-                {% endfor %}
-            ];
-            var topPkgChart = new google.visualization.BarChart(document.getElementById('top_packages_chart'));
-            topPkgChart.draw(google.visualization.arrayToDataTable(topPkgData), {
-                legend: { position: 'none' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#c62828'],
-                hAxis: { minValue: 0 }
-            });
-
-            // Top CVEs (by count)
-            var topCveData = [['CVE', 'Vuln Count']
-                {% for cve, count in dashboard_stats.top_cves %}
-                    ,['{{ cve }}', {{ count }}]
-                {% endfor %}
-            ];
-            var topCveChart = new google.visualization.BarChart(document.getElementById('top_cves_chart'));
-            topCveChart.draw(google.visualization.arrayToDataTable(topCveData), {
-                legend: { position: 'none' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#ef6c00'],
-                hAxis: { minValue: 0 }
-            });
-
-            // Vulnerabilities by package type
-            var typeData = [['Type', 'Vuln Count']
-                {% for ptype, count in dashboard_stats.package_type_counts.items() %}
-                    ,['{{ ptype }}', {{ count }}]
-                {% endfor %}
-            ];
-            var typeChart = new google.visualization.PieChart(document.getElementById('package_type_chart'));
-            typeChart.draw(google.visualization.arrayToDataTable(typeData), {
-                legend: { position: 'right' },
-                chartArea: { width: '80%', height: '80%' },
-                colors: ['#388e3c', '#fbc02d', '#ef6c00', '#c62828', '#1976d2', '#7e57c2', '#8d6e63']
-            });
-        }
-
-        // --- Global Filtering ---
-        function applyGlobalFilter() {
-            var severity = document.getElementById('global-severity-filter').value;
-            var image = document.getElementById('global-image-filter').value;
-            var search = document.getElementById('global-search-filter').value.trim().toLowerCase();
-
-            // Hide all rows first
-            var allRows = document.querySelectorAll('.vuln-row');
-            var allDetailRows = document.querySelectorAll('.details-row');
-            allRows.forEach(function(row) { row.style.display = 'none'; });
-            allDetailRows.forEach(function(row) { row.style.display = 'none'; });
-
-            // Show rows that match filters
-            var shown = 0;
-            allRows.forEach(function(row, idx) {
-                var rowSeverity = '';
-                var rowImage = '';
-                row.classList.forEach(function(cls) {
-                    if (cls.startsWith('severity-')) rowSeverity = cls.replace('severity-', '');
-                    if (cls.startsWith('image-')) rowImage = cls.replace('image-', '');
-                });
-                var show = true;
-                if (severity !== 'All' && rowSeverity !== severity) show = false;
-                if (image !== 'All' && rowImage !== image) show = false;
-                if (search) {
-                    var txt = row.textContent.toLowerCase();
-                    if (txt.indexOf(search) === -1) show = false;
-                }
-                if (show) {
-                    row.style.display = '';
-                    // Show the details row as well
-                    var nextRow = row.nextElementSibling;
-                    if (nextRow && nextRow.classList.contains('details-row')) {
-                        nextRow.style.display = '';
-                    }
-                    shown++;
-                }
-            });
-        }
-        function toggleDetails(id) {
-            var element = document.getElementById(id);
-            if (element.style.display === "none" || element.style.display === "") {
-                element.style.display = "block";
-            } else {
-                element.style.display = "none";
-            }
-        }
-    </script>
 </body>
 </html>
