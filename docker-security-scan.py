@@ -215,12 +215,10 @@ def scan_image(image, temp_dir, force_pull=False, cleanup=False, allowed_severit
             if 'jfrogResearchInformation' in vuln and vuln['jfrogResearchInformation'] and 'details' in vuln['jfrogResearchInformation']:
                 details = vuln['jfrogResearchInformation']['details']
             issue_id = vuln.get('issueId', 'N/A')
+            # Only include references for Critical and High vulnerabilities
             references = vuln.get('references', [])
-            if references:
-                if len(references) > 15:
-                    references_text = '\n'.join(references[:15]) + f"\n... and {len(references) - 15} more references"
-                else:
-                    references_text = '\n'.join(references)
+            if severity in ('Critical', 'High') and references:
+                references_text = '\n'.join(references)
             else:
                 references_text = 'None'
             vuln_details.append({

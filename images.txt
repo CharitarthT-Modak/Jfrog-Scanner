@@ -13,7 +13,8 @@ registry.yeedu.io:5043/yeedu_ldap:1.5.0
 registry.yeedu.io:5043/yeedu_vault:v1.1.1-rc3-ob3
 registry.yeedu.io:5043/yeedu_ui:v3.2.1-rc53
 registry.yeedu.io:5043/yeedu_functions:v2.10.1-rc8
-registry.yeedu.io:5043/yeedu_assistantx:v1.0.1-rc27
+registry.yeedu.io:5043/yeedu_assistantx:v1.0.1-rc27 
 registry.yeedu.io:5043/yeedu_airflow:v3.0.4
 registry.yeedu.io:5043/yeedu_minio:v1.0.0
 registry.yeedu.io:5043/yeedu_nfs_server:v1.0.0
+registry.yeedu.io:5043/yeedu_reactive_actors:v1.0.0-dependencies
